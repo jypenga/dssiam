@@ -91,7 +91,7 @@ class DSSiam(nn.Module):
 
             center = self.SoftArgmax(outs[i] * 1e3).squeeze()
 
-        return outs #, self._gram_det(features)
+        return outs, self._gram_det(features)
 
     def _initialize_weights(self):
         for m in self.modules():
@@ -103,9 +103,7 @@ class DSSiam(nn.Module):
 
     @torch.no_grad()
     def _gram_det(self, features):
-        for f in features:
-            print(f.view(-1).size())
-        V = torch.cat(tuple([f.view(-1)] for f in features)).T
+        V = torch.cat(tuple(f.view(-1).unsqueeze(0) for f in features)).T
         G = V.T @ V
         return np.linalg.norm(G.cpu().numpy(), 'nuc')
 
@@ -365,13 +363,13 @@ class TrackerSiamFC(Tracker):
         c = batch[2].to(self.device)
 
         with torch.set_grad_enabled(backward):
-            responses = self.net(z, x, c)
+            responses, det = self.net(z, x, c)
             loss = 0
             for n, response in enumerate(responses):
                 labels, weights = self._create_labels(response.size())
                 loss += F.binary_cross_entropy_with_logits(
                     response, labels, weight=weights, reduction='mean')
-            loss = loss / n
+            loss = (loss / n) + 1e-8 * det
 
             if backward:
                 self.optimizer.zero_grad()

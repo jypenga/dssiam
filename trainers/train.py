@@ -28,7 +28,7 @@ if __name__ == '__main__':
     start = time.time()
 
     # setup dataset and tracker
-    root_dir = os.path.expanduser('F:/GOT-10k')
+    root_dir = os.path.expanduser(args.root)
     seq_dataset = GOT10k(root_dir, subset='train', return_meta=False)
 
     if args.model == 'siamfc':
