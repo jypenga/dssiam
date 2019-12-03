@@ -104,6 +104,7 @@ class DSSiam(nn.Module):
     @torch.no_grad()
     def _gram_det(self, features):
         V = torch.cat(tuple(f.view(-1).unsqueeze(0) for f in features)).T
+        print(V.size())
         G = V.T @ V
         return np.linalg.norm(G.cpu().numpy(), 'nuc')
 
@@ -365,6 +366,7 @@ class TrackerSiamFC(Tracker):
         with torch.set_grad_enabled(backward):
             responses, det = self.net(z, x, c)
             loss = 0
+            print(3e-8 * det)
             for n, response in enumerate(responses):
                 labels, weights = self._create_labels(response.size())
                 loss += F.binary_cross_entropy_with_logits(
