@@ -8,4 +8,4 @@
 module load cuda90
 
 export PATH="/var/scratch/jypenga/anaconda3/bin:$PATH"
-python train.py --model="dssiam" --save="/var/scratch/jypenga/temp" --root="/var/scratch/jypenga/data" --batch_size=64 --num_workers=16 --seq_len=3 --seq_n=522 --epoch_n=10
+python train.py --model="dssiam" --save="/var/scratch/jypenga/temp" --root="/var/scratch/jypenga/data" --batch_size=64 --num_workers=16 --seq_len=3 --seq_n=580 --epoch_n=10

@@ -42,7 +42,7 @@ if __name__ == '__main__':
         if not args.seq_n:
             seq_dataset = Sequential(seq_dataset, n=args.seq_len, max_drift=0)
         else:
-            seq_dataset = OneSequential(seq_dataset, seq_n=args.seq_n, n=args.seq_len, f_diff=3, max_drift=0)
+            seq_dataset = OneSequential(seq_dataset, seq_n=args.seq_n, n=args.seq_len, max_drift=0)
 
     # setup data loader
     cuda = torch.cuda.is_available()
