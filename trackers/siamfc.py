@@ -51,6 +51,7 @@ class DSSiam(nn.Module):
 
     def forward(self, z, xs, x_cs):
         outs = []
+        features = []
 
         # reshape x image batch
         b, s, c, xd, yd = xs.size()
@@ -73,6 +74,10 @@ class DSSiam(nn.Module):
 
             # obtain instance features
             x = self.feature(x)
+
+            with torch.set_grad_enabled(False):
+                features.append(x)
+
             n, c, h, w = x.size()
             x = x.view(1, n * c, h, w)
 
@@ -86,7 +91,7 @@ class DSSiam(nn.Module):
 
             center = self.SoftArgmax(outs[i] * 1e3).squeeze()
 
-        return outs
+        return outs, self._gram_det(features)
 
     def _initialize_weights(self):
         for m in self.modules():
@@ -95,6 +100,12 @@ class DSSiam(nn.Module):
                                      nonlinearity='relu')
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
+
+    @torch.no_grad()
+    def _gram_det(features):
+        V = torch.cat(([f.view(-1)] for f in features)).T
+        G = V.T @ V
+        return np.linalg.norm(G.cpu().numpy(), 'nuc')
 
     def _get_indices(self, n, offset=0):
         indices = []
@@ -352,12 +363,12 @@ class TrackerSiamFC(Tracker):
         c = batch[2].to(self.device)
 
         with torch.set_grad_enabled(backward):
-            responses = self.net(z, x, c)
+            responses, dets = self.net(z, x, c)
             loss = 0
-            for n, response in enumerate(responses):
+            for n, (response, det) in enumerate(zip(responses, dets)):
                 labels, weights = self._create_labels(response.size())
                 loss += F.binary_cross_entropy_with_logits(
-                    response, labels, weight=weights, reduction='mean')
+                    response, labels, weight=weights, reduction='mean') + 0.01 * det
             loss = loss / n
 
             if backward:
