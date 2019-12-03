@@ -79,7 +79,7 @@ class OneSequential(Dataset):
         return exemplar_image, instance_images, centers
 
     def __len__(self):
-        return self.pairs_per_seq // self.n
+        return self.pairs_per_seq #// self.n
 
     def _sample_pair(self, n):
         assert n > 0
