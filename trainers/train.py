@@ -73,7 +73,7 @@ if __name__ == '__main__':
         # save checkpoint
         if args.model == 'siamfc':
             name = 'siamfc'
-        elif args.model == 'dssiam'
+        elif args.model == 'dssiam':
             name = 'dssiam' + '_n' + str(args.seq_len)
 
         if args.seq_n:
