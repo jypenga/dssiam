@@ -102,7 +102,7 @@ class DSSiam(nn.Module):
                 m.weight.data.fill_(1)
 
     @torch.no_grad()
-    def _gram_det(features):
+    def _gram_det(self, features):
         V = torch.cat(([f.view(-1)] for f in features)).T
         G = V.T @ V
         return np.linalg.norm(G.cpu().numpy(), 'nuc')
