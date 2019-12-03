@@ -62,7 +62,7 @@ if __name__ == '__main__':
             if args.model == 'siamfc':
                 loss = tracker.step(
                     batch, backward=True, update_lr=(step == 0))
-            elif args.model = 'dssiam':
+            elif args.model == 'dssiam':
                 loss = tracker.ds_step(
                     batch, backward=True, update_lr=(step == 0))
             if step % 20 == 0:
