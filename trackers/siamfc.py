@@ -12,7 +12,7 @@ from collections import namedtuple
 from torch.optim.lr_scheduler import ExponentialLR
 from got10k.trackers import Tracker
 
-from modules import AffineCentering, SoftArgmax2D
+from .modules import AffineCentering, SoftArgmax2D
 
 class DSSiam(nn.Module):
     """Non-debug version."""
