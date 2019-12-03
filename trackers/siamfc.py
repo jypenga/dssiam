@@ -370,7 +370,7 @@ class TrackerSiamFC(Tracker):
                 labels, weights = self._create_labels(response.size())
                 loss += F.binary_cross_entropy_with_logits(
                     response, labels, weight=weights, reduction='mean')
-            loss = (loss / n) + 1e-7 * det
+            loss = (loss / n) + 3e-8 * det
 
             if backward:
                 self.optimizer.zero_grad()
