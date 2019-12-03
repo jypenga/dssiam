@@ -42,7 +42,7 @@ if __name__ == '__main__':
         if not args.seq_n:
             seq_dataset = Sequential(seq_dataset, n=args.seq_len, max_drift=0)
         else:
-            seq_dataset = OneSequential(seq_dataset, seq_n=args.seq_n, n=args.seq_len, max_drift=0)
+            seq_dataset = OneSequential(seq_dataset, seq_n=args.seq_n, n=args.seq_len, f_diff=3, max_drift=0)
 
     # setup data loader
     cuda = torch.cuda.is_available()
@@ -78,6 +78,8 @@ if __name__ == '__main__':
 
         if args.seq_n:
             seq_n = '_' + str(args.seq_n)
+        if not args.seq_n:
+            seq_n = ''
 
         net_path = os.path.join(net_dir, name + seq_n + '_e%d.pth' % (epoch + 1))
         torch.save(tracker.net.state_dict(), net_path)
