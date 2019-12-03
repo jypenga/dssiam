@@ -364,7 +364,6 @@ class TrackerSiamFC(Tracker):
 
         with torch.set_grad_enabled(backward):
             responses, det = self.net(z, x, c)
-            print(1e-8 * det)
             loss = 0
             for n, response in enumerate(responses):
                 labels, weights = self._create_labels(response.size())
