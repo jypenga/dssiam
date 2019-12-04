@@ -103,9 +103,8 @@ class DSSiam(nn.Module):
 
     @torch.no_grad()
     def _gram_det(self, features):
-        V = torch.cat(tuple(f.view(-1).unsqueeze(0) for f in features)).T
-        print(V.size())
-        G = V.T @ V
+        V = torch.cat(tuple(f.view(-1).unsqueeze(0) for f in features)).transpose(0, 1)
+        G = V.transpose(0, 1) @ V
         return np.linalg.norm(G.cpu().numpy(), 'nuc')
 
     def _get_indices(self, n, offset=0):
