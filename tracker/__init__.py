@@ -1,1 +1,2 @@
-from .siamfc import SiamFC, DSSiam, TrackerSiamFC
+from .siamfc import TrackerSiamFC
+from .models import SiamFC, DSSiam

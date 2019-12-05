@@ -17,6 +17,7 @@ if __name__ == '__main__':
     # handle commandline arguments
     p = argparse.ArgumentParser()
     p.add_argument('--model', help='model to train with', type=str)
+    p.add_argument('--weights', help='additional custom intialization', type=str)
     p.add_argument('--save', help='path to save epochs to', type=str)
     p.add_argument('--root', help='path to dataset', type=str)
     p.add_argument('--batch_size', help='size of batches', type=int)
@@ -33,13 +34,13 @@ if __name__ == '__main__':
     seq_dataset = GOT10k(root_dir, subset='train', return_meta=False)
 
     if args.model == 'siamfc':
-        tracker = TrackerSiamFC(backbone=SiamFC())
+        tracker = TrackerSiamFC(backbone=SiamFC(), netpath=args.weights)
         if not args.seq_n:
             seq_dataset = Pairwise(seq_dataset)
         else:
             seq_dataset = OnePairwise(seq_dataset, seq_n=args.seq_n)
     elif args.model == 'dssiam':
-        tracker = TrackerSiamFC(backbone=DSSiam(n=args.seq_len))
+        tracker = TrackerSiamFC(backbone=DSSiam(n=args.seq_len), netpath=args.weights)
         if not args.seq_n:
             seq_dataset = Sequential(seq_dataset, n=args.seq_len, max_drift=0)
         else:
