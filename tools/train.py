@@ -62,7 +62,7 @@ if __name__ == '__main__':
     # re-use weight options
     if not args.weights:
         tracker.net.initialize_weights
-        prev_epochs = 0
+        prev_epochs = 1
     else:
         prev_epochs = int(args.weights.split('_')[-1].split('.')[0][1:])
 
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         if not args.seq_n:
             seq_n = ''
 
-        net_path = os.path.join(net_dir, name + seq_n + '_e%d.pth' % (epoch + 1))
+        net_path = os.path.join(net_dir, name + seq_n + '_e%d.pth' % (epoch + prev_epochs))
         torch.save(tracker.net.state_dict(), net_path)
 
     print('Total time:', time.time() - start)
