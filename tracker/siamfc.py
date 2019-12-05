@@ -175,8 +175,6 @@ class TrackerSiamFC(Tracker):
     def step(self, batch, backward=True, update_lr=False):
         if backward:
             self.net.train()
-            if update_lr:
-                self.lr_scheduler.step()
         else:
             self.net.eval()
 
@@ -193,6 +191,8 @@ class TrackerSiamFC(Tracker):
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
+                if update_lr:
+                    self.lr_scheduler.step()
 
         return loss.item()
 

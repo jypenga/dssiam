@@ -59,6 +59,9 @@ if __name__ == '__main__':
     if not os.path.exists(net_dir):
         os.makedirs(net_dir)
 
+    if not args.weights:
+        tracker.net.initialize_weights
+
     # training loop
     epoch_num = args.epoch_n
     for epoch in range(epoch_num):

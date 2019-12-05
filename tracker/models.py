@@ -43,7 +43,7 @@ class DSSiam(nn.Module):
             nn.ReLU(inplace=True),
             # conv5
             nn.Conv2d(384, 256, 3, 1, groups=2))
-        self._initialize_weights()
+        # self.initialize_weights()
 
     def forward(self, z, xs, x_cs):
         outs = []
@@ -89,7 +89,7 @@ class DSSiam(nn.Module):
 
         return outs, self._gram_det(features)
 
-    def _initialize_weights(self):
+    def initialize_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 init.kaiming_normal_(m.weight.data, mode='fan_out',
@@ -135,7 +135,7 @@ class SiamFC(nn.Module):
             nn.ReLU(inplace=True),
             # conv5
             nn.Conv2d(384, 256, 3, 1, groups=2))
-        self._initialize_weights()
+        # self._initialize_weights()
 
     def forward(self, z, x):
         z = self.feature(z)
@@ -152,7 +152,7 @@ class SiamFC(nn.Module):
 
         return out
 
-    def _initialize_weights(self):
+    def initialize_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 init.kaiming_normal_(m.weight.data, mode='fan_out',
