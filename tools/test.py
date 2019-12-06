@@ -15,8 +15,8 @@ if __name__ == '__main__':
     p.add_argument('--model', help='model to test with', type=str)
     p.add_argument('--weights', help='weights to use for model', type=str)
     p.add_argument('--root', help='path to dataset', type=str)
-    p.add_argument('--result', help='path to save results to', type=str)
-    p.add_argument('--report', help='path to save reports to', type=str)
+    p.add_argument('--results', help='path to save results to', type=str)
+    p.add_argument('--reports', help='path to save reports to', type=str)
     p.add_argument('--subset', help='subset to test on', type=str)
     args = p.parse_args(sys.argv[1:])
 
