@@ -63,7 +63,9 @@ class TrackerSiamFC(Tracker):
             'weight_decay': 5e-4,
             'momentum': 0.9,
             'r_pos': 16,
-            'r_neg': 0}
+            'r_neg': 0,
+            'gr_lam': 3e-8
+            }
 
         for key, val in kargs.items():
             if key in cfg:
@@ -214,7 +216,7 @@ class TrackerSiamFC(Tracker):
                 labels, weights = self._create_labels(response.size())
                 loss += F.binary_cross_entropy_with_logits(
                     response, labels, weight=weights, reduction='mean')
-            loss = (loss / n) + 3e-8 * det
+            loss = (loss / n) + self.cfg.gr_lam * det
 
             if backward:
                 self.optimizer.zero_grad()
