@@ -34,14 +34,14 @@ if __name__ == '__main__':
     seq_dataset = GOT10k(root_dir, subset='train', return_meta=False)
 
     if args.model == 'siamfc':
-        netpath = os.path.expanduser(args.weights)
+        netpath = os.path.expanduser(args.weights) if args.weights else None
         tracker = TrackerSiamFC(backbone=SiamFC(), netpath=netpath)
         if not args.seq_n:
             seq_dataset = Pairwise(seq_dataset)
         else:
             seq_dataset = OnePairwise(seq_dataset, seq_n=args.seq_n)
     elif args.model == 'dssiam':
-        netpath = os.path.expanduser(args.weights)
+        netpath = os.path.expanduser(args.weights) if args.weights else None
         tracker = TrackerSiamFC(backbone=DSSiam(n=args.seq_len), netpath=netpath)
         if not args.seq_n:
             seq_dataset = Sequential(seq_dataset, n=args.seq_len, max_drift=0)
