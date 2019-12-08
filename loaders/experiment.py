@@ -157,6 +157,7 @@ class ExperimentGOT10k(object):
             for name in tracker_names:
                 print('Evaluating', name)
                 ious = {}
+                ces = {}
                 times = {}
                 performance.update({name: {
                     'overall': {},
