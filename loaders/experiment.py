@@ -14,7 +14,7 @@ import cv2
 from got10k.datasets import GOT10k
 from got10k.utils.metrics import rect_iou, center_error
 from got10k.utils.viz import show_frame
-from got10l.utils.ioutils import compress
+from got10k.utils.ioutils import compress
 
 
 class ExperimentGOT10k(object):
