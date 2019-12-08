@@ -36,8 +36,7 @@ if __name__ == '__main__':
         ExperimentGOT10k(os.path.expanduser(args.root),
             subset=args.subset,
             result_dir=os.path.expanduser(args.results),
-            report_dir=os.path.expanduser(args.reports),
-            list_file=None
+            report_dir=os.path.expanduser(args.reports)
             )
     ]
 

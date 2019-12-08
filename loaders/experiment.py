@@ -32,7 +32,7 @@ class ExperimentGOT10k(object):
         report_dir (string, optional): Directory for storing performance
             evaluation results. Default is ``./reports``.
     """
-    def __init__(self, root_dir, subset='val', list_file=None,
+    def __init__(self, root_dir, subset='val',
                  result_dir='results', report_dir='reports', use_dataset=True):
         super(ExperimentGOT10k, self).__init__()
         assert subset in ['val', 'test']
