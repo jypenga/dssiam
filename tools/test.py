@@ -2,10 +2,11 @@ import os
 import sys
 import argparse
 
-from got10k.experiments import *
+# from got10k.experiments import *
 
 sys.path.append('..')
 from tracker import *
+from loaders import ExperimentGOT10k
 
 
 if __name__ == '__main__':
