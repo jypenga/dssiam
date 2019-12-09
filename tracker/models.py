@@ -47,7 +47,7 @@ class DSSiam(nn.Module):
 
     def forward(self, z, xs, x_cs):
         outs = []
-        features = []
+        features = torch.Tensor().to('cuda')
 
         # reshape x image batch
         b, s, c, xd, yd = xs.size()
@@ -72,7 +72,7 @@ class DSSiam(nn.Module):
             x = self.feature(x)
 
             with torch.set_grad_enabled(False):
-                features.append(x)
+                features = torch.cat((features, x))
 
             n, c, h, w = x.size()
             x = x.view(1, n * c, h, w)
@@ -87,7 +87,7 @@ class DSSiam(nn.Module):
 
             center = self.SoftArgmax(outs[i] * 1e3).squeeze()
 
-        return outs, self._gram_det(features)
+        return outs, self._gram_det(features, num)
 
     def initialize_weights(self):
         for m in self.modules():
@@ -98,15 +98,20 @@ class DSSiam(nn.Module):
                 m.weight.data.fill_(1)
 
     @torch.no_grad()
-    def _gram_det(self, features):
-        V = torch.cat(tuple(f.view(-1).unsqueeze(0) for f in features)).transpose(0, 1)
-        G = V.transpose(0, 1) @ V
-        return np.linalg.norm(G.cpu().numpy(), 'nuc')
+    def _gram_det(self, features, batch_size):
+        ds = []
+        for i in range(self.n):
+            indices = self._get_indices(self.n, offset=i, incr=batch_size)
+            V = torch.flatten(features[indices], start_dim=1).transpose(0, 1)
+            G = V.transpose(0, 1) @ V
+            ds.append(np.linalg.det(G.cpu().numpy()))
+        return ds
 
-    def _get_indices(self, n, offset=0):
+    def _get_indices(self, n, offset=0, incr=None):
+        incr = self.n if not incr else incr
         indices = []
         for i in range(n):
-                indices.append(i * self.n + offset)
+                indices.append(i * incr + offset)
         return indices
 
 

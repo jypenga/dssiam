@@ -64,7 +64,7 @@ class TrackerSiamFC(Tracker):
             'momentum': 0.9,
             'r_pos': 16,
             'r_neg': 0,
-            'gr_lam': 3e-8
+            'gr_lam': 3e-14 #3e-8
             }
 
         for key, val in kargs.items():
@@ -198,7 +198,7 @@ class TrackerSiamFC(Tracker):
 
         return loss.item()
 
-    def ds_step(self, batch, backward=True, update_lr=False):
+    def ds_step(self, batch, backward=True, regularize=True, update_lr=False):
         """Deeply supervised step function."""
         if backward:
             self.net.train()
@@ -210,13 +210,19 @@ class TrackerSiamFC(Tracker):
         c = batch[2].to(self.device)
 
         with torch.set_grad_enabled(backward):
-            responses, det = self.net(z, x, c)
+            responses, dets = self.net(z, x, c)
+            # print(det)
             loss = 0
-            for n, response in enumerate(responses):
+            for n, (response, det) in enumerate(zip(responses, dets)):
                 labels, weights = self._create_labels(response.size())
-                loss += F.binary_cross_entropy_with_logits(
-                    response, labels, weight=weights, reduction='mean')
-            loss = (loss / n) + self.cfg.gr_lam * det
+                if regularize:
+                    loss += (F.binary_cross_entropy_with_logits(
+                        response, labels, weight=weights, reduction='mean') + self.cfg.gr_lam * det)
+                    print(self.cfg.gr_lam * det)
+                else:
+                    loss += F.binary_cross_entropy_with_logits(
+                        response, labels, weight=weights, reduction='mean')
+            loss = (loss / n)
 
             if backward:
                 self.optimizer.zero_grad()

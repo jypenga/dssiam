@@ -25,6 +25,7 @@ if __name__ == '__main__':
     p.add_argument('--seq_len', help='length of instance sequence', type=int)
     p.add_argument('--seq_n', help='specific sequence to train on', type=int)
     p.add_argument('--epoch_n', help='amount of epochs to train over', type=int)
+    p.add_argument('--gram', help='add gram regularization', type=int)
     args = p.parse_args(sys.argv[1:])
 
     start = time.time()
@@ -74,8 +75,15 @@ if __name__ == '__main__':
                 loss = tracker.step(
                     batch, backward=True, update_lr=(step == 0))
             elif args.model == 'dssiam':
-                loss = tracker.ds_step(
-                    batch, backward=True, update_lr=(step == 0))
+                if args.gram:
+                    loss = tracker.ds_step(batch,
+                                           backward=True,
+                                           update_lr=(step == 0))
+                else:
+                    loss = tracker.ds_step(batch,
+                                           backward=True,
+                                           regularize=False,
+                                           update_lr=(step == 0))
             if step % 20 == 0:
                 print('Epoch [{}][{}/{}]: Loss: {:.3f} Time: {:.3f} (s)'.format(
                     epoch + 1, step + 1, len(loader), loss, (time.time() - start)))
