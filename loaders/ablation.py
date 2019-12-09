@@ -25,11 +25,12 @@ class RandomStretch(object):
         return img.resize(tuple(size), method)
 
 
-class Pairwise(Dataset):
+class Ablation(Dataset):
 
-    def __init__(self, seq_dataset, **kargs):
-        super(Pairwise, self).__init__()
+    def __init__(self, seq_dataset, n=3, **kargs):
+        super(Ablation, self).__init__()
         self.cfg = self.parse_args(**kargs)
+        self.n = n
 
         self.pairs_per_seq = 10
         self.max_dist = 100

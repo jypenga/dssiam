@@ -29,7 +29,10 @@ if __name__ == '__main__':
     elif args.model == 'siamfc':
         tracker = TrackerSiamFC(backbone=SiamFC(), net_path=net_path)
 
-    tracker.name = args.weights.split('/')[-1]
+    if args.subset == 'val':
+        tracker.name = args.weights.split('/')[-1].split('.')[0]
+    elif args.subset == 'test':
+        tracker.name = args.weights.split('/')[-1].split('.')[0] + '_test'
 
     # setup experiments
     experiments = [
