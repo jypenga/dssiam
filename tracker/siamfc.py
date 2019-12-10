@@ -211,18 +211,19 @@ class TrackerSiamFC(Tracker):
 
         with torch.set_grad_enabled(backward):
             responses, dets = self.net(z, x, c)
-            # print(det)
+            print(self.cfg.gr_lam * np.mean(dets))
             loss = 0
             for n, (response, det) in enumerate(zip(responses, dets)):
                 labels, weights = self._create_labels(response.size())
-                if regularize:
-                    loss += (F.binary_cross_entropy_with_logits(
-                        response, labels, weight=weights, reduction='mean') + self.cfg.gr_lam * det)
-                    print(self.cfg.gr_lam * det)
-                else:
-                    loss += F.binary_cross_entropy_with_logits(
-                        response, labels, weight=weights, reduction='mean')
+                loss += F.binary_cross_entropy_with_logits(
+                    response, labels, weight=weights, reduction='mean')
+
             loss = (loss / n)
+
+            # gram regularization
+            reg_term = self.cfg.gr_lam * np.mean(dets)
+            if regularize:
+                loss += reg_term
 
             if backward:
                 self.optimizer.zero_grad()
@@ -231,7 +232,7 @@ class TrackerSiamFC(Tracker):
                 if update_lr:
                     self.lr_scheduler.step()
 
-        return loss.item()
+        return loss.item(), reg_term
 
     def _crop_and_resize(self, image, center, size, out_size, pad_color):
         # convert box to corners (0-indexed)

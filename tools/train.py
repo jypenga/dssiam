@@ -4,6 +4,8 @@ import torch
 import time
 import argparse
 
+import numpy as np
+
 from torch.utils.data import DataLoader
 from got10k.datasets import GOT10k
 
@@ -13,6 +15,10 @@ from tracker import *
 
 
 if __name__ == '__main__':
+
+    # memory for saving avg. loss and determinant per step
+    losses = []
+    dets = []
 
     # handle commandline arguments
     p = argparse.ArgumentParser()
@@ -76,11 +82,11 @@ if __name__ == '__main__':
                     batch, backward=True, update_lr=(step == 0))
             elif args.model == 'dssiam':
                 if args.gram:
-                    loss = tracker.ds_step(batch,
+                    loss, det = tracker.ds_step(batch,
                                            backward=True,
                                            update_lr=(step == 0))
                 else:
-                    loss = tracker.ds_step(batch,
+                    loss, det = tracker.ds_step(batch,
                                            backward=True,
                                            regularize=False,
                                            update_lr=(step == 0))
@@ -88,6 +94,9 @@ if __name__ == '__main__':
                 print('Epoch [{}][{}/{}]: Loss: {:.3f} Time: {:.3f} (s)'.format(
                     epoch + 1, step + 1, len(loader), loss, (time.time() - start)))
                 sys.stdout.flush()
+
+                losses.append(loss)
+                dets.append(det)
 
         # save checkpoint
         if args.model == 'siamfc':
@@ -102,5 +111,8 @@ if __name__ == '__main__':
 
         net_path = os.path.join(net_dir, name + seq_n + '_e%d.pth' % (epoch + prev_epochs))
         torch.save(tracker.net.state_dict(), net_path)
+
+    path = os.path.join(net_dir,  name + seq_n + '_e%d.csv' % (epoch + prev_epochs))
+    np.savetxt(path, (losses, dets), delimiter=',')
 
     print('Total time:', time.time() - start)

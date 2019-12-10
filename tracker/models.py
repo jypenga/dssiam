@@ -100,7 +100,7 @@ class DSSiam(nn.Module):
     @torch.no_grad()
     def _gram_det(self, features, batch_size):
         ds = []
-        for i in range(self.n):
+        for i in range(batch_size):
             indices = self._get_indices(self.n, offset=i, incr=batch_size)
             V = torch.flatten(features[indices], start_dim=1).transpose(0, 1)
             G = V.transpose(0, 1) @ V
