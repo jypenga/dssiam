@@ -32,13 +32,14 @@ if __name__ == '__main__':
     p.add_argument('--seq_n', help='specific sequence to train on', type=int)
     p.add_argument('--epoch_n', help='amount of epochs to train over', type=int)
     p.add_argument('--gram', help='add gram regularization', type=int)
+    p.add_argument('--subset', help='subset to train on', type=str)
     args = p.parse_args(sys.argv[1:])
 
     start = time.time()
 
     # setup dataset and tracker
     root_dir = os.path.expanduser(args.root)
-    seq_dataset = GOT10k(root_dir, subset='train', return_meta=False)
+    seq_dataset = GOT10k(root_dir, subset=args.subset, return_meta=False)
 
     if args.model == 'siamfc':
         netpath = os.path.expanduser(args.weights) if args.weights else None
