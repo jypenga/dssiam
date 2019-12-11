@@ -119,7 +119,7 @@ if __name__ == '__main__':
         net_path = os.path.join(net_dir, name + gr + seq_n + '_e%d.pth' % (epoch + prev_epochs))
         torch.save(tracker.net.state_dict(), net_path)
 
-    path = os.path.join(net_dir,  name + seq_n + '_e%d.csv' % (epoch + prev_epochs))
+    path = os.path.join(net_dir,  name + gr +  seq_n + '_e%d.csv' % (epoch + prev_epochs))
     np.savetxt(path, np.array([losses, dets]), delimiter=',')
 
     print('Total time:', time.time() - start)
