@@ -136,7 +136,7 @@ class SiamFC(nn.Module):
             nn.ReLU(inplace=True),
             # conv5
             nn.Conv2d(384, 256, 3, 1, groups=2))
-        self._initialize_weights()
+        self.initialize_weights()
 
     def forward(self, z, x):
         z = self.feature(z)
