@@ -6,7 +6,7 @@ import argparse
 
 sys.path.append('..')
 from tracker import *
-from loaders import ExperimentGOT10k
+from loaders import ExperimentGOT10k, ExperimentOTB
 
 
 if __name__ == '__main__':
@@ -18,6 +18,8 @@ if __name__ == '__main__':
     p.add_argument('--root', help='path to dataset', type=str)
     p.add_argument('--results', help='path to save results to', type=str)
     p.add_argument('--reports', help='path to save reports to', type=str)
+    p.add_argument('--benchmark', help='which benchmark', type=str,
+                   default='all')
     p.add_argument('--subset', help='subset to test on', type=str)
     args = p.parse_args(sys.argv[1:])
 
@@ -35,15 +37,26 @@ if __name__ == '__main__':
         tracker.name = args.weights.split('/')[-1].split('.')[0] + '_test'
 
     # setup experiments
+    names = ['GOT-10k', 'OTB2015']
     experiments = [
-        ExperimentGOT10k(os.path.expanduser(args.root),
+        ExperimentGOT10k(os.path.join(os.path.expanduser(args.root), names[0]),
             subset=args.subset,
+            result_dir=os.path.expanduser(args.results),
+            report_dir=os.path.expanduser(args.reports)
+            ),
+        ExperimentOTB(os.path.join(os.path.expanduser(args.root), names[1]),
             result_dir=os.path.expanduser(args.results),
             report_dir=os.path.expanduser(args.reports)
             )
     ]
 
+    if args.benchmark == 'GOT-10k':
+        names == [names[0]]
+    if args.benchmark == 'OTB2015':
+        names == [names[1]]
+
     # run tracking experiments and report performance
-    for e in experiments:
-        e.run(tracker)
-        e.report([tracker.name])
+    for i, name in enumerate(names):
+        experiment = experiments[i]
+        experiment.run(tracker)
+        experiment.report([tracker.name])
