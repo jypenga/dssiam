@@ -5,8 +5,6 @@ import torch.nn as nn
 import torch.nn.init as init
 import torch.nn.functional as F
 
-import numpy as np
-
 from .modules import AffineCentering, SoftArgmax2D
 
 
@@ -43,7 +41,7 @@ class DSSiam(nn.Module):
             nn.ReLU(inplace=True),
             # conv5
             nn.Conv2d(384, 256, 3, 1, groups=2))
-        # self.initialize_weights()
+        self.initialize_weights()
 
     def forward(self, z, xs, x_cs):
         outs = []
@@ -71,8 +69,7 @@ class DSSiam(nn.Module):
             # obtain instance features
             x = self.feature(x)
 
-            with torch.set_grad_enabled(False):
-                features = torch.cat((features, x))
+            features = torch.cat((features, x))
 
             n, c, h, w = x.size()
             x = x.view(1, n * c, h, w)
@@ -97,14 +94,13 @@ class DSSiam(nn.Module):
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
 
-    @torch.no_grad()
     def _gram_det(self, features, batch_size):
-        ds = []
+        ds = torch.zeros(batch_size).to('cuda')
         for i in range(batch_size):
             indices = self._get_indices(self.n, offset=i, incr=batch_size)
             V = torch.flatten(features[indices], start_dim=1).transpose(0, 1)
             G = V.transpose(0, 1) @ V
-            ds.append(np.linalg.det(G.cpu().numpy()))
+            ds[i] = torch.norm(G, p='nuc')
         return ds
 
     def _get_indices(self, n, offset=0, incr=None):
@@ -140,7 +136,7 @@ class SiamFC(nn.Module):
             nn.ReLU(inplace=True),
             # conv5
             nn.Conv2d(384, 256, 3, 1, groups=2))
-        # self._initialize_weights()
+        self._initialize_weights()
 
     def forward(self, z, x):
         z = self.feature(z)

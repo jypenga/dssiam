@@ -64,7 +64,7 @@ class TrackerSiamFC(Tracker):
             'momentum': 0.9,
             'r_pos': 16,
             'r_neg': 0,
-            'gr_lam': 5e-12 #3e-8
+            'gr_lam': 5e-6 #3e-8
             }
 
         for key, val in kargs.items():
@@ -211,7 +211,7 @@ class TrackerSiamFC(Tracker):
 
         with torch.set_grad_enabled(backward):
             responses, dets = self.net(z, x, c)
-            print(self.cfg.gr_lam * np.mean(dets))
+            print(self.cfg.gr_lam * torch.mean(dets))
             loss = 0
             for n, (response, det) in enumerate(zip(responses, dets)):
                 labels, weights = self._create_labels(response.size())
@@ -221,7 +221,7 @@ class TrackerSiamFC(Tracker):
             loss = (loss / n)
 
             # gram regularization
-            reg_term = self.cfg.gr_lam * np.mean(dets)
+            reg_term = self.cfg.gr_lam * torch.mean(dets)
             if regularize:
                 loss += reg_term
 
