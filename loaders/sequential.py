@@ -19,7 +19,7 @@ from PIL import Image, ImageStat, ImageOps
 
 class Sequential(Dataset):
 
-    def __init__(self, seq_dataset, n=3, f_diff=2, max_drift=0):
+    def __init__(self, seq_dataset, n=3, f_diff=1, max_drift=0):
         super(Sequential, self).__init__()
         self.n = n
         self.f_diff = f_diff
