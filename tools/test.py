@@ -40,6 +40,7 @@ if __name__ == '__main__':
 
     # setup experiments
     names = ['GOT-10k', 'OTB2015']
+
     experiments = [
         ExperimentGOT10k(os.path.join(os.path.expanduser(args.root), names[0]),
             subset=args.subset,

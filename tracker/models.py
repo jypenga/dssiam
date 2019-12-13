@@ -44,7 +44,7 @@ class DSSiam(nn.Module):
         self.initialize_weights()
 
     def forward(self, z, xs, x_cs):
-        outs = []
+        outs = torch.Tensor().to('cuda')
         features = torch.Tensor().to('cuda')
 
         # reshape x image batch
@@ -80,7 +80,7 @@ class DSSiam(nn.Module):
             out = self.BatchNorm(out)
 
             # adjust the scale of responses
-            outs.append(out + 0.0)
+            outs = torch.cat((outs, (out + 0.0).unsqueeze(0)))
 
             center = self.SoftArgmax(outs[i] * 1e3).squeeze()
 

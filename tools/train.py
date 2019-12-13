@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     # re-use weight options
     if not args.weights:
-        tracker.net.initialize_weights
+        # tracker.net.initialize_weights()
         prev_epochs = 1
     else:
         prev_epochs = int(args.weights.split('_')[-1].split('.')[0][1:])

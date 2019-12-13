@@ -211,14 +211,13 @@ class TrackerSiamFC(Tracker):
 
         with torch.set_grad_enabled(backward):
             responses, dets = self.net(z, x, c)
-            print(self.cfg.gr_lam * torch.mean(dets))
-            loss = 0
-            for n, (response, det) in enumerate(zip(responses, dets)):
+            loss = torch.zeros(z.size(1)).to(self.device)
+            for i, (response, det) in enumerate(zip(responses, dets)):
                 labels, weights = self._create_labels(response.size())
-                loss += F.binary_cross_entropy_with_logits(
+                loss[i] = F.binary_cross_entropy_with_logits(
                     response, labels, weight=weights, reduction='mean')
 
-            loss = (loss / n)
+            loss = torch.mean(loss)
 
             # gram regularization
             reg_term = self.cfg.gr_lam * torch.mean(dets)
