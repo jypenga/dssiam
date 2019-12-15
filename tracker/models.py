@@ -13,6 +13,7 @@ class DSSiam(nn.Module):
     def __init__(self, n=1), reg=False):
         super(DSSiam, self).__init__()
         self.n = n
+        self.reg = reg
 
         # additional modules
         self.SoftArgmax = SoftArgmax2D(upsample=255)
@@ -84,7 +85,7 @@ class DSSiam(nn.Module):
 
             center = self.SoftArgmax(outs[i] * 1e3).squeeze()
 
-        if reg:
+        if self.reg:
             return outs, self._gram_det(features, num)
         else:
             return outs, torch.zeros(batch_size).to(z.device)
