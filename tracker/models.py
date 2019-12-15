@@ -44,8 +44,8 @@ class DSSiam(nn.Module):
         self.initialize_weights()
 
     def forward(self, z, xs, x_cs):
-        outs = torch.Tensor().to('cuda')
-        features = torch.Tensor().to('cuda')
+        outs = torch.Tensor().to(z.device)
+        features = torch.Tensor().to(z.device)
 
         # reshape x image batch
         b, s, c, xd, yd = xs.size()
@@ -95,7 +95,7 @@ class DSSiam(nn.Module):
                 m.weight.data.fill_(1)
 
     def _gram_det(self, features, batch_size):
-        ds = torch.zeros(batch_size).to('cuda')
+        ds = torch.zeros(batch_size).to(features.device)
         for i in range(batch_size):
             indices = self._get_indices(self.n, offset=i, incr=batch_size)
             V = torch.flatten(features[indices], start_dim=1).transpose(0, 1)
