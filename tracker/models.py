@@ -10,7 +10,7 @@ from .modules import AffineCentering, SoftArgmax2D
 
 class DSSiam(nn.Module):
     """Non-debug version."""
-    def __init__(self, n=1):
+    def __init__(self, n=1), reg=False):
         super(DSSiam, self).__init__()
         self.n = n
 
@@ -84,7 +84,10 @@ class DSSiam(nn.Module):
 
             center = self.SoftArgmax(outs[i] * 1e3).squeeze()
 
-        return outs, self._gram_det(features, num)
+        if reg:
+            return outs, self._gram_det(features, num)
+        else:
+            return outs, torch.zeros(batch_size).to(z.device)
 
     def initialize_weights(self):
         for m in self.modules():
