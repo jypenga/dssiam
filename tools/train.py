@@ -97,6 +97,8 @@ if __name__ == '__main__':
                     epoch + 1, step + 1, len(loader), loss, (time.time() - start)))
                 sys.stdout.flush()
 
+                torch.cuda.empty_cache()
+
                 losses.append(loss)
                 dets.append(det)
 
