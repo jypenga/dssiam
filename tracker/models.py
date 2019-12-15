@@ -10,7 +10,7 @@ from .modules import AffineCentering, SoftArgmax2D
 
 class DSSiam(nn.Module):
     """Non-debug version."""
-    def __init__(self, n=1), reg=False):
+    def __init__(self, n=1, reg=False):
         super(DSSiam, self).__init__()
         self.n = n
         self.reg = reg
