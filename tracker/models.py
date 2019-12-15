@@ -88,7 +88,7 @@ class DSSiam(nn.Module):
         if self.reg:
             return outs, self._gram_det(features, num)
         else:
-            return outs, torch.zeros(batch_size).to(z.device)
+            return outs, torch.zeros(b).to(z.device)
 
     def initialize_weights(self):
         for m in self.modules():
