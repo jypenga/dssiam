@@ -41,35 +41,31 @@ class Ablation(Dataset):
         self.seq_dataset = seq_dataset
         self.indices = np.random.permutation(len(seq_dataset))
         # augmentation for exemplar and instance images
-        self.transform_z = Compose([
-            RandomStretch(max_stretch=0.05),
-            CenterCrop(self.instance_sz - 8),
-            RandomCrop(self.instance_sz - 2 * 8),
-            CenterCrop(self.exemplar_sz),
-            ToTensor()])
-        self.transform_x = Compose([
-            RandomStretch(max_stretch=0.05),
-            CenterCrop(self.instance_sz - 8),
-            RandomCrop(self.instance_sz - 2 * 8),
-            ToTensor()])
+        # self.transform_z = Compose([
+        #     RandomStretch(max_stretch=0.05),
+        #     CenterCrop(self.instance_sz - 8),
+        #     RandomCrop(self.instance_sz - 2 * 8),
+        #     CenterCrop(self.exemplar_sz),
+        #     ToTensor()])
+        # self.transform_x = Compose([
+        #     RandomStretch(max_stretch=0.05),
+        #     CenterCrop(self.instance_sz - 8),
+        #     RandomCrop(self.instance_sz - 2 * 8),
+        #     ToTensor()])
 
     def __getitem__(self, index):
         index = self.indices[index % len(self.seq_dataset)]
         img_files, anno = self.seq_dataset[index]
 
         # remove too small objects
-        valid = anno[:, 2:].prod(axis=1) >= 10
-        img_files = np.array(img_files)[valid]
-        anno = anno[valid, :]
+        # valid = anno[:, 2:].prod(axis=1) >= 10
+        # img_files = np.array(img_files)[valid]
+        # anno = anno[valid, :]
 
-        rand_z, rand_x = self._sample_pair(len(img_files))
+        rand_z, rand_xs = self._sample_pair(len(img_files))
 
         exemplar_image = Image.open(img_files[rand_z])
-        instance_image = Image.open(img_files[rand_x])
-        exemplar_image = self._crop_and_resize(exemplar_image, anno[rand_z])
-        instance_image = self._crop_and_resize(instance_image, anno[rand_x])
-        exemplar_image = 255.0 * self.transform_z(exemplar_image)
-        instance_image = 255.0 * self.transform_x(instance_image)
+        instance_images = [Image.open(img_files[x]) for x in rand_xs]
 
         return exemplar_image, instance_image
 
@@ -88,7 +84,8 @@ class Ablation(Dataset):
             rand_z = np.random.choice(n - rand_dist)
             rand_x = rand_z + rand_dist
 
-        return rand_z, rand_x
+        return rand_z, np.arange(rand_x, rand_x + self.n * 1,
+            (self.n*self.f_diff)/self.n).astype(int)
 
     def _crop_and_resize(self, image, box):
         # convert box to 0-indexed and center based

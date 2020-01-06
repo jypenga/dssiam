@@ -33,6 +33,7 @@ if __name__ == '__main__':
     p.add_argument('--epoch_n', help='amount of epochs to train over', type=int)
     p.add_argument('--gram', help='add gram regularization', type=int)
     p.add_argument('--subset', help='subset to train on', type=str)
+    p.add_argument('--ablation', help='train siamfc as ablation case', type=int)
     args = p.parse_args(sys.argv[1:])
 
     start = time.time()

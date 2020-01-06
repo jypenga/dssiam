@@ -198,6 +198,36 @@ class TrackerSiamFC(Tracker):
 
         return loss.item()
 
+    def abl_step(self, batch, backward=True, update_lr=False):
+        """Ablation step function"""
+        if backward:
+            self.net.train()
+        else:
+            self.net.eval()
+
+        z = batch[0].to(self.device)
+        xs = batch[1].to(self.device)
+
+        with torch.set_grad_enabled(backward):
+            loss = torch.zeros(x.size(1)).to(self.device)
+            for i, x in enumerate(xs):
+                responses = self.net(z, x)
+                labels, weights = self._create_labels(responses.size())
+                loss[i] = F.binary_cross_entropy_with_logits(
+                    responses, labels, weight=weights, size_average=True)
+
+                loss = torch.mean(loss)
+
+            if backward:
+                self.optimizer.zero_grad()
+                loss.backward()
+                self.optimizer.step()
+                if update_lr:
+                    self.lr_scheduler.step()
+
+        return loss.item()
+
+
     def ds_step(self, batch, backward=True, regularize=True, update_lr=False):
         """Deeply supervised step function."""
         if backward:
