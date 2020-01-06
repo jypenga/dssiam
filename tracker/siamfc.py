@@ -210,7 +210,7 @@ class TrackerSiamFC(Tracker):
         xs = xs.permute([1, 0, 2, 3, 4])
 
         with torch.set_grad_enabled(backward):
-            loss = torch.zeros(x.size(1)).to(self.device)
+            loss = torch.zeros(xs.size(0)).to(self.device)
             for i, x in enumerate(xs):
                 responses = self.net(z, x[i])
                 labels, weights = self._create_labels(responses.size())
