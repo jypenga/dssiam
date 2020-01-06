@@ -112,6 +112,8 @@ if __name__ == '__main__':
         # save checkpoint
         if args.model == 'siamfc':
             name = 'siamfc'
+            if args.ablation:
+                name += '_abl'
         elif args.model == 'dssiam':
             name = 'dssiam' + '_n' + str(args.seq_len)
 
