@@ -45,7 +45,7 @@ if __name__ == '__main__':
     if args.model == 'siamfc':
         netpath = os.path.expanduser(args.weights) if args.weights else None
         tracker = TrackerSiamFC(backbone=SiamFC(), netpath=netpath)
-        if not args.seq_n:
+        if not args.seq_n and not args.ablation:
             seq_dataset = Pairwise(seq_dataset)
         elif not args.seq_n and args.ablation:
             seq_dataset = Sequential(seq_dataset, n=args.seq_len, max_drift=0)
