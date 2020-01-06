@@ -214,7 +214,7 @@ class TrackerSiamFC(Tracker):
         with torch.set_grad_enabled(backward):
             loss = torch.zeros(xs.size(0)).to(self.device)
             for i, x in enumerate(xs):
-                responses = self.net(z, x[i])
+                responses = self.net(z, x)
                 labels, weights = self._create_labels(responses.size())
                 loss[i] = F.binary_cross_entropy_with_logits(
                     responses, labels, weight=weights, size_average=True)
