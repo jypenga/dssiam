@@ -89,6 +89,7 @@ if __name__ == '__main__':
                 loss = tracker.abl_step(batch,
                                         backward=True,
                                         update_lr=(step == 0))
+                det = 0
             elif args.model == 'dssiam':
                 if args.gram:
                     loss, det = tracker.ds_step(batch,
