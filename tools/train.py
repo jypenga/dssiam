@@ -81,7 +81,7 @@ if __name__ == '__main__':
     epoch_num = args.epoch_n
     for epoch in range(epoch_num):
         for step, batch in enumerate(loader):
-            if args.model == 'siamfc':
+            if args.model == 'siamfc' and not args.ablation:
                 loss = tracker.step(
                     batch, backward=True, update_lr=(step == 0))
                 det = 0
