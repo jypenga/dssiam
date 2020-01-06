@@ -47,6 +47,8 @@ if __name__ == '__main__':
         tracker = TrackerSiamFC(backbone=SiamFC(), netpath=netpath)
         if not args.seq_n:
             seq_dataset = Pairwise(seq_dataset)
+        elif not args.seq_n and args.ablation:
+            seq_dataset = Sequential(seq_dataset, n=args.seq_len, max_drift=0)
         else:
             seq_dataset = OnePairwise(seq_dataset, seq_n=args.seq_n)
     elif args.model == 'dssiam':
@@ -83,6 +85,10 @@ if __name__ == '__main__':
                 loss = tracker.step(
                     batch, backward=True, update_lr=(step == 0))
                 det = 0
+            elif args.model == 'siamfc' and args.ablation:
+                loss = tracker.abl_step(batch,
+                                        backward=True,
+                                        update_lr=(step == 0))
             elif args.model == 'dssiam':
                 if args.gram:
                     loss, det = tracker.ds_step(batch,
