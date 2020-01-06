@@ -207,11 +207,12 @@ class TrackerSiamFC(Tracker):
 
         z = batch[0].to(self.device)
         xs = batch[1].to(self.device)
+        xs = xs.permute([1, 0, 2, 3, 4])
 
         with torch.set_grad_enabled(backward):
             loss = torch.zeros(x.size(1)).to(self.device)
             for i, x in enumerate(xs):
-                responses = self.net(z, x)
+                responses = self.net(z, x[i])
                 labels, weights = self._create_labels(responses.size())
                 loss[i] = F.binary_cross_entropy_with_logits(
                     responses, labels, weight=weights, size_average=True)
