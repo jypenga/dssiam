@@ -207,9 +207,7 @@ class TrackerSiamFC(Tracker):
 
         z = batch[0].to(self.device)
         xs = batch[1].to(self.device)
-        print(xs.size())
         xs = xs.permute([1, 0, 2, 3, 4])
-        print(xs.size())
 
         with torch.set_grad_enabled(backward):
             loss = torch.zeros(xs.size(0)).to(self.device)
@@ -219,7 +217,7 @@ class TrackerSiamFC(Tracker):
                 loss[i] = F.binary_cross_entropy_with_logits(
                     responses, labels, weight=weights, size_average=True)
 
-                loss = torch.mean(loss)
+            loss = torch.mean(loss)
 
             if backward:
                 self.optimizer.zero_grad()
