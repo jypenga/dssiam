@@ -33,13 +33,13 @@ class ExperimentFR(object):
     def run(self, tracker):
 
         for d, dataset in enumerate(self.datasets):
-            seq_name = dataset.seq_names[s]
-            print(seq_name)
-            
             key = self.names[d]
             d_fr = 0
 
             for s, (img_files, anno) in enumerate(dataset):
+                seq_name = dataset.seq_names[s]
+                print(seq_name)
+
                 s_fr = 0
 
                 frame_num = len(img_files)
