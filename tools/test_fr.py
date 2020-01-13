@@ -16,8 +16,8 @@ class ExperimentFR(object):
     def __init__(self, root_dir, subset, report_dir, list_file=None, benchmark='all'):
         self.subset = subset
         self.names = ['GOT-10k', 'OTB2015']
-        self.datasets = [GOT10k(os.path.join(root_dir, 'GOT-10k'), subset=subset),
-                        OTB(os.path.join(root_dir, 'OTB2015'), 2015, download=True)]
+        self.datasets = [GOT10k(os.path.join(root_dir, self.names[0]), subset=subset),
+                        OTB(os.path.join(root_dir, self.names[1]), 2015)]
         self.report_dir = os.path.join(report_dir, 'FR')
         self.theta = .1
 
@@ -31,7 +31,7 @@ class ExperimentFR(object):
         self.dict = {name:{'total':{}, 'seq_wise':{}} for name in self.names}
 
     def run(self, tracker):
-        seq_name = self.dataset.seq_names[s]
+        seq_name = dataset.seq_names[s]
         print(seq_name)
 
         for d, dataset in enumerate(self.datasets):
