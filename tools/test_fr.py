@@ -39,6 +39,7 @@ class ExperimentFR(object):
             for s, (img_files, anno) in enumerate(dataset):
                 seq_name = dataset.seq_names[s]
                 print(seq_name)
+                print(frame_num)
 
                 s_fr = 0
 
