@@ -31,6 +31,8 @@ class ExperimentFR(object):
         self.dict = {name:{'total':{}, 'seq_wise':{}} for name in self.names}
 
     def run(self, tracker):
+        seq_name = self.dataset.seq_names[s]
+        print(seq_name)
 
         for d, dataset in enumerate(self.datasets):
             key = self.names[d]
