@@ -61,7 +61,8 @@ class ExperimentFR(object):
 
                     # re-init if prediction overlap < .1
                     if iou[0] <= self.theta and f > 0:
-                        tracker.init(image, anno[f, :])
+                        if f < frame_num:
+                            tracker.init(image, anno[f, :])
                         d_fr += 1
                         s_fr += 1
 
