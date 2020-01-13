@@ -46,6 +46,7 @@ class ExperimentFR(object):
                 boxes = np.zeros((frame_num, 4))
 
                 for f, img_file in enumerate(img_files):
+                    print(f)
                     image = Image.open(img_file)
                     if not image.mode == 'RGB':
                         image = image.convert('RGB')
