@@ -8,4 +8,4 @@
 module load cuda90
 
 export PATH="/var/scratch/jypenga/anaconda3/bin:$PATH"
-python test-fr.py --model='dssiam' --weights='/var/scratch/jypenga/models/dssiam_n2_e50.pth' --root='/var/scratch/jypenga/data' --report='/var/scratch/jypenga/reports' --subset='val'
+python test_fr.py --model='dssiam' --weights='/var/scratch/jypenga/models/dssiam_n2_e50.pth' --root='/var/scratch/jypenga/data' --report='/var/scratch/jypenga/reports' --subset='val'
