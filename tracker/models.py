@@ -23,21 +23,21 @@ class DSSiam(nn.Module):
         # convolutional stages of AlexNet
         self.feature = nn.Sequential(
             # conv1
-            nn.Conv2d(3, 96, 11, 2),
+            nn.Conv2d(3, 96, 11, 2, bias=False),
             nn.BatchNorm2d(96, eps=1e-6, momentum=0.05),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(3, 2),
             # conv2
-            nn.Conv2d(96, 256, 5, 1, groups=2),
+            nn.Conv2d(96, 256, 5, 1, groups=2, bias=False),
             nn.BatchNorm2d(256, eps=1e-6, momentum=0.05),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(3, 2),
             # conv3
-            nn.Conv2d(256, 384, 3, 1),
+            nn.Conv2d(256, 384, 3, 1, bias=False),
             nn.BatchNorm2d(384, eps=1e-6, momentum=0.05),
             nn.ReLU(inplace=True),
             # conv4
-            nn.Conv2d(384, 384, 3, 1, groups=2),
+            nn.Conv2d(384, 384, 3, 1, groups=2, bias=False),
             nn.BatchNorm2d(384, eps=1e-6, momentum=0.05),
             nn.ReLU(inplace=True),
             # conv5
@@ -97,7 +97,7 @@ class DSSiam(nn.Module):
                                      nonlinearity='relu')
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
-                m.bias.data.zero_()
+                # m.bias.data.zero_()
 
     def _gram_det(self, features, batch_size):
         ds = torch.zeros(batch_size).to(features.device)
