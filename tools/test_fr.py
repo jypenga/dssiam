@@ -71,7 +71,10 @@ class ExperimentFR(object):
                 self.dict[key]['seq_wise'][s] = {'fr':s_fr, 'length':frame_num}
             self.dict[key]['total'] = {'fr':d_fr}
 
-        report_file = os.path.join(self.report_dir, 'fr.json')
+        name = args.weights.split('/')[-1].split('.')[0]
+        os.makedirs(os.path.join(self.report_dir, name))
+        curr_dir = os.path.join(self.report_dir, name)
+        report_file = os.path.join(curr_dir, 'fr.json')
 
         with open(report_file, 'w') as f:
             json.dump(self.dict, f, indent=4)
