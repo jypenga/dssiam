@@ -64,7 +64,7 @@ class TrackerSiamFC(Tracker):
             'momentum': 0.9,
             'r_pos': 16,
             'r_neg': 0,
-            'gr_lam': 1e-6 # 5e-6 3e-8
+            'gr_lam': 5e-7 # 1e-6 # 5e-6 3e-8
             }
 
         for key, val in kargs.items():
