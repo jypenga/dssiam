@@ -12,10 +12,26 @@ import torch
 
 import numpy as np
 
-from torchvision.transforms import ToTensor, CenterCrop
+from torchvision.transforms import Compose, CenterCrop, RandomCrop, ToTensor
 from torch.utils.data import Dataset
 from PIL import Image, ImageStat, ImageOps
 
+class RandomStretch(object):
+
+    def __init__(self, max_stretch=0.05, interpolation='bilinear'):
+        assert interpolation in ['bilinear', 'bicubic']
+        self.max_stretch = max_stretch
+        self.interpolation = interpolation
+
+    def __call__(self, img):
+        scale = 1.0 + np.random.uniform(
+            -self.max_stretch, self.max_stretch)
+        size = np.round(np.array(img.size, float) * scale).astype(int)
+        if self.interpolation == 'bilinear':
+            method = Image.BILINEAR
+        elif self.interpolation == 'bicubic':
+            method = Image.BICUBIC
+        return img.resize(tuple(size), method)
 
 class Sequential(Dataset):
 
@@ -34,6 +50,18 @@ class Sequential(Dataset):
         self.exemplar_sz = 127
         self.instance_sz = 255
         self.context = .5
+
+        self.transform_z = Compose([
+            RandomStretch(max_stretch=0.05),
+            CenterCrop(self.instance_sz - 8),
+            RandomCrop(self.instance_sz - 2 * 8),
+            CenterCrop(self.exemplar_sz),
+            ToTensor()])
+        self.transform_x = Compose([
+            RandomStretch(max_stretch=0.05),
+            CenterCrop(self.instance_sz - 8),
+            RandomCrop(self.instance_sz - 2 * 8),
+            ToTensor()])
 
     def __getitem__(self, index):
         # obtain image files and annotations
@@ -75,6 +103,12 @@ class Sequential(Dataset):
         exemplar_image = CenterCrop(self.exemplar_sz)(exemplar_image)
         exemplar_image = ToTensor()(exemplar_image).float()
         instance_images = torch.from_numpy(instance_images).permute([0, 3, 1, 2]).float()
+        print(instance_images.size())
+
+        exemplar_image = 255.0 * self.transform_z(exemplar_image)
+        instance_images = ToTensor([255.0 * self.transform_x(img) for img in instance_images]).float()
+        print(instance_images.size())
+
         centers = torch.from_numpy(centers).float()
 
         return exemplar_image, instance_images, centers
