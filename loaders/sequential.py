@@ -26,7 +26,7 @@ class RandomStretch(object):
     def __call__(self, img):
         scale = 1.0 + np.random.uniform(
             -self.max_stretch, self.max_stretch)
-        size = np.round(np.array(img.size, dtype=float) * scale).astype(int)
+        size = np.round(np.array(img.size) * scale).astype(int)
         if self.interpolation == 'bilinear':
             method = Image.BILINEAR
         elif self.interpolation == 'bicubic':
