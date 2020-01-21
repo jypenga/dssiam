@@ -11,7 +11,7 @@ import matplotlib
 from PIL import Image
 import cv2
 
-from got10k.datasets import GOT10k
+from got10k.datasets import GOT10k, OTB
 from got10k.utils.metrics import rect_iou, center_error
 from got10k.utils.viz import show_frame
 from got10k.utils.ioutils import compress
