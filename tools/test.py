@@ -6,9 +6,7 @@ import argparse
 
 sys.path.append('..')
 from tracker import *
-from loaders import ExperimentGOT10k
-
-from got10k.experiments import ExperimentOTB
+from loaders import ExperimentGOT10k, ExperimentOTB
 
 
 if __name__ == '__main__':
