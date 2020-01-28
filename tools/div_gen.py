@@ -70,10 +70,10 @@ class ExperimentFR(object):
                         for i, _ in enumerate(trackers):
                             box = boxes[i, f, :]
                             rect = patches.Rectangle(box[:2], *box[2:],
-                                linewidth=1, edgecolor=self.colors[i], facecolor='none')
+                                linewidth=5, edgecolor=self.colors[i], facecolor='none')
                             ax.add_patch(rect)
                         rect = patches.Rectangle(anno[f, :][:2], *anno[f, :][2:],
-                            linewidth=1, edgecolor='springgreen', facecolor='none')
+                            linewidth=5, edgecolor='springgreen', facecolor='none')
                         ax.add_patch(rect)
                         name = f"s{s}_f{f}.png"
                         plt.axis('off')
