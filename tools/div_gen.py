@@ -87,7 +87,7 @@ if __name__ == '__main__':
     p.add_argument('--subset', help='subset to test on', type=str)
     args = p.parse_args(sys.argv[1:])
 
-    paths = [os.path.joing(args.models, 'dssiam_n2_e50.pth'),
+    paths = [os.path.join(args.models, 'dssiam_n2_e50.pth'),
         os.path.join(args.models, 'siamfc_abl_e50.pth')]
 
     trackers = []
